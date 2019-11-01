@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Yaft.FileReader;
+using Yaft.InvertedIndex;
 using Yaft.Processor;
 
 namespace Yaft
@@ -22,12 +23,19 @@ namespace Yaft
             var documents = reader.ReadFile();
 
             var ppc = new PreprocessClient();
-            var documentTokens = ppc.GetTokens(documents);
-            
-            foreach(var doc in documentTokens.First().TokenList)
+            var documentTokensBulk = ppc.GetTokens(documents);
+
+            var invertedIndex = new PositionalIndex();
+
+            foreach (var docTokens in documentTokensBulk)
             {
-                Console.WriteLine(doc.ToString());
+                invertedIndex.AddDocumentToIndex(docTokens);
             }
+
+            var tokenRepeats = invertedIndex.GetAllTokensRepeats()
+                .OrderByDescending(x => x.repeatCount)
+                .ToList();
+
 
         }
     }

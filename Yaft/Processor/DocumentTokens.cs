@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Yaft.Processor
 {
     public class DocumentTokens
     {
-        public List<string> TokenList;
+        public string DocumentId;
+        public List<(int position, string token)> TokensByPosition;
 
-        public DocumentTokens(List<string> tokenList)
+        public DocumentTokens(string documentId, Dictionary<int, string> tokensByPosition)
         {
-            TokenList = tokenList;
+            DocumentId = documentId;
+            TokensByPosition = tokensByPosition.Select(x => (position: x.Key, token: x.Value)).ToList();
         }
     }
 }

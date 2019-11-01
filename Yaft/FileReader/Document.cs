@@ -6,7 +6,9 @@ namespace Yaft.FileReader
     public class Document
     {
         public string Id;
-        public Dictionary<string, string> KeyValues;
+        private Dictionary<string, string> KeyValues;
+
+        public string Text => KeyValues["Text"];
 
         public Document(string id, Dictionary<string, string> keyValues)
         {
@@ -17,11 +19,6 @@ namespace Yaft.FileReader
         public override string ToString()
         {
             return JsonConvert.SerializeObject(KeyValues);
-        }
-
-        public string GetText()
-        {
-            return KeyValues["Text"];
         }
     }
 }

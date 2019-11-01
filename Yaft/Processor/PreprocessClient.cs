@@ -18,46 +18,40 @@ namespace Yaft.Processor
 
         public List<DocumentTokens> GetTokens(List<Document> input)
         {
-            var req = Serialize(input);
-            var content = new StringContent(req, Encoding.UTF8, "application/json");
+            var request = SerializeRequest(input);
+            var content = new StringContent(request, Encoding.UTF8, "application/json");
 
             using (HttpClient client = new HttpClient())
             {
-                var response = client.PostAsync(PersianUrl  , content).Result;
+                var response = client.PostAsync(PersianUrl, content).Result;
 #if !DEBUG
             response.EnsureSuccessStatusCode();
 #endif
 
-                var json = response.Content.ReadAsStringAsync().Result;
-                var deserializedResponse = JsonConvert.DeserializeObject<List<List<string>>>(json);
+                var responseJson = response.Content.ReadAsStringAsync().Result;
+                var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<int, string>>>(responseJson);
 
                 var result = new List<DocumentTokens>();
 
-                foreach (var tokenList in deserializedResponse)
+                foreach (var docTokens in deserializedResponse)
                 {
-                    result.Add(new DocumentTokens(tokenList));
+                    result.Add(new DocumentTokens(docTokens.Key, docTokens.Value));
                 }
 
                 return result;
             }
-
-            //using (var request = new HttpRequestMessage(HttpMethod.Post, EnglishUrl))
-            //{
-            //    request.Headers.Accept.Clear();
-            //    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            //    request.Content = input.ToString();
-            //    HttpResponseMessage response = SendRequest(request);
-
-            //    CheckResponse(response);
-
-
-            //}
         }
 
-        private string Serialize(List<Document> input)
+        private string SerializeRequest(List<Document> input)
         {
-            return "{\"documents\": " + JsonConvert.SerializeObject(input.Take(2).Select(x => x.GetText()).ToList()) + "}";
+            var request = new Dictionary<string, string>();
+
+            foreach(var doc in input)
+            {
+                request.Add(doc.Id, doc.Text);
+            }
+
+            return "{\"documents\": " + JsonConvert.SerializeObject(request) + "}";
         }
     }
 }
