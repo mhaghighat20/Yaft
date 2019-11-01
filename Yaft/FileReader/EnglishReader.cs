@@ -12,7 +12,7 @@ namespace Yaft.FileReader
     {
         private readonly string FilePath;
 
-        public EnglishReader(string filePath)
+        internal EnglishReader(string filePath)
         {
             FilePath = filePath;
         }
@@ -23,13 +23,13 @@ namespace Yaft.FileReader
             using (var csv = new CsvReader(reader))
             {
                 csv.Configuration.HasHeaderRecord = true;
-                var records = csv.GetRecords<EnglishRow>();
+                var rows = csv.GetRecords<EnglishRow>();
 
                 var result = new List<Document>();
 
-                foreach (var record in records)
+                foreach (var row in rows)
                 {
-                    result.Add(record.ToDocument());
+                    result.Add(row.ToDocument());
                 }
 
                 return result;

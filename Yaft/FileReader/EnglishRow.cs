@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Yaft.FileReader
 {
@@ -13,14 +10,15 @@ namespace Yaft.FileReader
 
         public Document ToDocument()
         {
-            return new Document()
-            {
-                KeyValues = new Dictionary<string, string>()
+            var id = Guid.NewGuid().ToString();
+
+            var keyValues = new Dictionary<string, string>()
                 {
                     { "Title", Title },
                     { "Text", Text }
-                }
-            };
+                };
+
+            return new Document(id, keyValues);
         }
     }
 }

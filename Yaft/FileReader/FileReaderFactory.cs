@@ -12,5 +12,10 @@ namespace Yaft.FileReader
         {
             return new EnglishReader(@"D:\MIR\Phase1\English.csv");
         }
+
+        public IFileReader GetPersianReader()
+        {
+            return new PersianReader(@"D:\MIR\Phase1\Persian.xml");
+        }
     }
 }

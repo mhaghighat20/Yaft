@@ -54,6 +54,10 @@
     <Compile Include="FileReader\EnglishRow.cs" />
     <Compile Include="FileReader\FileReader.cs" />
     <Compile Include="FileReader\FileReaderFactory.cs" />
+    <Compile Include="FileReader\PersianReader.cs" />
+    <Compile Include="FileReader\WikiPage.cs" />
+    <Compile Include="Processor\DocumentTokens.cs" />
+    <Compile Include="Processor\PreprocessClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
