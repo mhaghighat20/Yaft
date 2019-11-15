@@ -9,11 +9,10 @@ using Yaft.FileReader;
 namespace Yaft.Processor
 {
     public class PreprocessClient
-    {
-        //static readonly 
-        private const string BaseUrl = "http://95.85.2.25:8000/api/v1/preprocess_documents/?lang=";
-        private const string EnglishUrl = BaseUrl + "en";
-        private const string PersianUrl = BaseUrl + "fa";
+    { 
+        public const string BaseUrl = "http://95.85.2.25:8000/api/v1/";
+        private const string EnglishUrl = BaseUrl + "preprocess_documents?lang=en";
+        private const string PersianUrl = BaseUrl + "preprocess_documents?lang=fa";
 
 
         public List<DocumentTokens> GetTokens(List<Document> input)
@@ -29,7 +28,7 @@ namespace Yaft.Processor
 #endif
 
                 var responseJson = response.Content.ReadAsStringAsync().Result;
-                var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<int, string>>>(responseJson);
+                var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, string>>>(responseJson);
 
                 var result = new List<DocumentTokens>();
 

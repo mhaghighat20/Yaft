@@ -9,22 +9,22 @@ namespace Yaft.InvertedIndex
 {
     public class PositionalIndex
     {
-        private Dictionary<string, TokenPostings> IndexByTokens { get; set; }
+        public Dictionary<string, TokenPosting> IndexByTokens { get; private set; }
 
         public PositionalIndex()
         {
-            IndexByTokens = new Dictionary<string, TokenPostings>();
+            IndexByTokens = new Dictionary<string, TokenPosting>();
         }
 
         public void AddDocumentToIndex(DocumentTokens documentTokens)
         {
-            foreach(var tokenPositionTuple in documentTokens.TokensByPosition)
+            foreach(var (position, token) in documentTokens.TokensByPosition)
             {
-                AddToken(tokenPositionTuple.token, documentTokens.DocumentId, tokenPositionTuple.position);
+                AddToken(token, documentTokens.DocumentId, position);
             }
         }
 
-        private void AddToken(string token, string documentId, int position)
+        private void AddToken(string token, int documentId, int position)
         {
             var postings = GetOrCreateTokenPostings(token);
             var occurrencePerDocument = postings.GetOrCreateDocumentOccurrence(documentId);
@@ -32,15 +32,15 @@ namespace Yaft.InvertedIndex
             occurrencePerDocument.Positions.Add(position);
         }
 
-        private TokenPostings GetOrCreateTokenPostings(string token)
+        private TokenPosting GetOrCreateTokenPostings(string token)
         {
-            if (IndexByTokens.TryGetValue(token, out TokenPostings tokenPostings))
+            if (IndexByTokens.TryGetValue(token, out TokenPosting tokenPostings))
             {
                 return tokenPostings;
             }
             else
             {
-                var result = new TokenPostings(token);
+                var result = new TokenPosting(token);
                 IndexByTokens.Add(token, result);
 
                 return result;
@@ -53,16 +53,16 @@ namespace Yaft.InvertedIndex
         }
     }
 
-    internal class TokenPostings
+    public class TokenPosting
     {
         public readonly string Token;
 
-        public Dictionary<string, OccurrencesPerDocument> AllOccurrencesByDocumentId { get; private set; }
+        public Dictionary<int, OccurrencesPerDocument> AllOccurrencesByDocumentId { get; private set; }
 
-        public TokenPostings(string token)
+        public TokenPosting(string token)
         {
             Token = token;
-            AllOccurrencesByDocumentId = new Dictionary<string, OccurrencesPerDocument>();
+            AllOccurrencesByDocumentId = new Dictionary<int, OccurrencesPerDocument>();
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Yaft.InvertedIndex
             return AllOccurrencesByDocumentId.Values.Sum(x => x.Positions.Count);
         }
 
-        internal OccurrencesPerDocument GetOrCreateDocumentOccurrence(string documentId)
+        internal OccurrencesPerDocument GetOrCreateDocumentOccurrence(int documentId)
         {
             if (AllOccurrencesByDocumentId.TryGetValue(documentId, out OccurrencesPerDocument occurrencesPerDocument))
             {
@@ -91,13 +91,13 @@ namespace Yaft.InvertedIndex
         }
     }
 
-    internal class OccurrencesPerDocument
+    public class OccurrencesPerDocument
     {
-        readonly string DocumentId;
+        readonly int DocumentId;
 
         public List<int> Positions { get; private set; }
 
-        public OccurrencesPerDocument(string documentId)
+        public OccurrencesPerDocument(int documentId)
         {
             DocumentId = documentId;
             Positions = new List<int>();
