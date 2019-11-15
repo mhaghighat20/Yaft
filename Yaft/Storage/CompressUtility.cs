@@ -15,11 +15,14 @@ namespace Yaft.Storage
 
         private readonly CompressMode Mode = CompressMode.gamma;
 
-        public List<string> CompressIntList(List<List<int>> rawDataBulk)
+        public void CompressIntList(List<RawDataMapping> mapping)
         {
             var i = 0;
-            var mapping = rawDataBulk.Select(x => new RawDataMapping(x, i++)).ToList();
-            var mappingDic = mapping.ToDictionary(x => x.Id);
+
+            foreach (var item in mapping)
+                item.Id = i++;
+
+            Dictionary<int, RawDataMapping> mappingDic = mapping.ToDictionary(x => x.Id);
 
             var request = SerializeCompressRequest(mapping);
             var content = new StringContent(request, Encoding.UTF8, "application/json");
@@ -42,8 +45,6 @@ namespace Yaft.Storage
                     var id = Convert.ToInt32(compressedList.Key);
                     mappingDic[id].CompressedData = compressedList.Value;
                 }
-
-                return mapping.Select(x => x.CompressedData).ToList();
             }
         }
 
@@ -104,16 +105,18 @@ namespace Yaft.Storage
         }
     }
 
-    class RawDataMapping
+    public class RawDataMapping
     {
         public List<int> RawData { get; set; }
         public string CompressedData { get; set; }
         public int Id { get; set; }
 
-        public RawDataMapping(List<int> rawData, int id)
+        public string Token { get; set; }
+
+        public RawDataMapping(string token, List<int> rawData)
         {
             RawData = rawData;
-            Id = id;
+            Token = token;
         }
 
         public RawDataMapping(string compressedData, int id)

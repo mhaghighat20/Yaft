@@ -5,12 +5,12 @@ namespace Yaft.FileReader
 {
     public class Document
     {
-        public string Id;
+        public int Id;
         private Dictionary<string, string> KeyValues;
 
         public string Text => KeyValues["Text"];
 
-        public Document(string id, Dictionary<string, string> keyValues)
+        public Document(int id, Dictionary<string, string> keyValues)
         {
             Id = id;
             KeyValues = keyValues;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using Yaft.InvertedIndex;
 
@@ -6,7 +7,7 @@ namespace Yaft.Storage
 {
     public class CompressedIndex
     {
-        Dictionary<string, CompressedPosting> PostingsByToken;
+        public Dictionary<string, CompressedPosting> PostingsByToken { get; private set; }
 
         public CompressedIndex()
         {
@@ -15,14 +16,15 @@ namespace Yaft.Storage
 
         public void AddPosting(string token, TokenPosting posting)
         {
-            PostingsByToken.Add(token, new CompressedPosting(posting));
+            var cp = new CompressedPosting(posting);
+            PostingsByToken.Add(token, cp);
         }
 
         public PositionalIndex Decompress()
         {
             var result = new PositionalIndex();
 
-            foreach(var tokenItem in PostingsByToken)
+            foreach (var tokenItem in PostingsByToken)
             {
                 var token = tokenItem.Key;
                 result.IndexByTokens.Add(token, tokenItem.Value.Decompress(token));
@@ -38,10 +40,13 @@ namespace Yaft.Storage
 
         List<string> OccurrencesList;
 
+        [JsonIgnore]
+        public List<List<int>> rawData;
+
         public CompressedPosting(TokenPosting posting)
         {
-            var rawData = new List<List<int>>();
-            var docIds = posting.AllOccurrencesByDocumentId.Keys.ToList();
+            rawData = new List<List<int>>();
+            var docIds = posting.AllOccurrencesByDocumentId.Keys.OrderBy(x => x).ToList();
 
             rawData.Add(docIds);
 
@@ -49,10 +54,10 @@ namespace Yaft.Storage
             {
                 rawData.Add(docOccurrence.Positions.ToList());
             }
+        }
 
-            var compressUtil = new CompressUtility();
-            var compressedStrings = compressUtil.CompressIntList(rawData);
-
+        public void PlaceCompressedData(List<string> compressedStrings)
+        {
             CompressedListOfDocumentIds = compressedStrings.First();
             OccurrencesList = compressedStrings.Skip(1).ToList();
         }

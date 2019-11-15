@@ -23,13 +23,16 @@ namespace Yaft.FileReader
             using (var csv = new CsvReader(reader))
             {
                 csv.Configuration.HasHeaderRecord = true;
-                var rows = csv.GetRecords<EnglishRow>();
+                var rows = csv.GetRecords<EnglishRow>().ToList();
 
                 var result = new List<Document>();
+                var id = IdGenerator.Instance.ReserveRange(rows.Count);
 
                 foreach (var row in rows)
                 {
-                    result.Add(row.ToDocument());
+                    result.Add(row.ToDocument(id));
+
+                    id++;
                 }
 
                 return result;

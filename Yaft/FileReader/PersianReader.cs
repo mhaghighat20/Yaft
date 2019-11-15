@@ -33,7 +33,7 @@ namespace Yaft.FileReader
             {
                 var wikiPage = new WikiPage(node, nsManager);
 
-                result.Add(wikiPage.ToDocument());
+                result.Add(wikiPage.ToDocument(IdGenerator.Instance.GetNext()));
             }
 
             return result;

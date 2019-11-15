@@ -25,7 +25,7 @@ namespace Yaft.FileReader
                 .SelectSingleNode("ns:text", nsManager).InnerText;
         }
 
-        public Document ToDocument()
+        public Document ToDocument(int id)
         {
             var keyValues = new Dictionary<string, string>()
                 {
@@ -33,7 +33,7 @@ namespace Yaft.FileReader
                     { "Text", Text }
                 };
 
-            return new Document(Id, keyValues);
+            return new Document(id, keyValues);
         }
     }
 }
