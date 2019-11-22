@@ -7,7 +7,7 @@ using Yaft.Processor;
 
 namespace Yaft.InvertedIndex
 {
-    public class BiwordWrapper
+    public class BigramWrapper
     {
         private const string url = PreprocessClient.BaseUrl + "index_words?reset=true";
         public void IndexTokens(List<string> tokens)

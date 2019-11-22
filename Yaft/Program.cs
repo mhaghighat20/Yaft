@@ -31,25 +31,58 @@ namespace Yaft
             Console.WriteLine(string.Join(",", tokenRepeats));
             Console.WriteLine("Token count is: " + tokenRepeats.Count);
             WriteInFile(MainIndex, "MainIndex");
-
-            Console.WriteLine("Generating Biword Index...");
-            new BiwordWrapper().IndexTokens(MainIndex.GetAllTokens());
-            Console.WriteLine("Completed Generating Biword Index...");
+            GenerateBiword();
 
             //Console.ReadLine();
+            //Compress();
+            //Console.ReadLine();
+
+            //Decompress();
+            //Console.ReadLine();
+
+            while (true)
+            {
+                Console.WriteLine("Enter your query: ");
+                var query = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    Console.WriteLine("Your query is empty.");
+                    continue;
+                }
+
+                var queryExecuter = new QueryExecuter(query, MainIndex);
+                var result = queryExecuter.Execute();
+
+                Console.WriteLine("Query after preprocess: " + JsonConvert.SerializeObject(queryExecuter.Query));
+                Console.WriteLine(string.Join(Environment.NewLine, result));
+                Console.WriteLine("---------------------------------" + Environment.NewLine);
+            }
+        }
+
+        private void GenerateBiword()
+        {
+            Console.WriteLine("Generating Biword Index...");
+            new BigramWrapper().IndexTokens(MainIndex.GetAllTokens());
+            Console.WriteLine("Completed Generating Biword Index...");
+        }
+
+        private void Compress()
+        {
             Console.WriteLine("Compressing...");
             CompressedMainIndex = new IndexCompressor().Compress(MainIndex);
             WriteInFile(CompressedMainIndex, "CompressedMainIndex");
 
             Console.WriteLine("Compressed Successfully");
-            //Console.ReadLine();
+        }
 
+        private void Decompress()
+        {
             Console.WriteLine("decompressing...");
             var decompressedIndex = new IndexCompressor().Decompress(CompressedMainIndex);
             WriteInFile(decompressedIndex, "decompressedIndex");
 
             Console.WriteLine("Decompressed Successfully");
-            //Console.ReadLine();
         }
 
         private void WriteInFile(object index, string filename)
