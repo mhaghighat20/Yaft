@@ -47,6 +47,11 @@ namespace Yaft.InvertedIndex
             }
         }
 
+        public List<string> GetAllTokens()
+        {
+            return PostingsByToken.Keys.ToList();
+        }
+
         public List<(string token, int repeatCount)> GetAllTokensRepeats()
         {
             return PostingsByToken.Values.Select(x => (token: x.Token, x.GetTokenOccurrenceCount())).ToList();
@@ -55,6 +60,14 @@ namespace Yaft.InvertedIndex
         public void AddDecompressedPosting(TokenPosting tokenPosting)
         {
             PostingsByToken.Add(tokenPosting.Token, tokenPosting);
+        }
+
+        public void SortPostings()
+        {
+            foreach(var posting in PostingsByToken.Values)
+            {
+                posting.Sort();
+            }
         }
     }
 
@@ -93,6 +106,11 @@ namespace Yaft.InvertedIndex
                 return result;
             }
 
+        }
+
+        internal void Sort()
+        {
+            AllOccurrencesByDocumentId = AllOccurrencesByDocumentId.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
         }
     }
 

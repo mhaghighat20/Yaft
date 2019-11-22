@@ -57,6 +57,7 @@
     <Compile Include="FileReader\IdGenerator.cs" />
     <Compile Include="FileReader\PersianReader.cs" />
     <Compile Include="FileReader\WikiPage.cs" />
+    <Compile Include="InvertedIndex\BiwordWrapper.cs" />
     <Compile Include="InvertedIndex\PositionalIndex.cs" />
     <Compile Include="Processor\DocumentTokens.cs" />
     <Compile Include="Processor\PreprocessClient.cs" />

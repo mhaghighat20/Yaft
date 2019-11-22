@@ -102,7 +102,7 @@ namespace Yaft.Storage
                 request.Add(item.Id.ToString(), item.CompressedData);
             }
 
-            return "{\"string_list\": " + JsonConvert.SerializeObject(request) + "}";
+            return "{\"compressed_values\": " + JsonConvert.SerializeObject(request) + "}";
         }
     }
 

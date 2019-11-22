@@ -30,25 +30,32 @@ namespace Yaft
 
             Console.WriteLine(string.Join(",", tokenRepeats));
             Console.WriteLine("Token count is: " + tokenRepeats.Count);
-            Console.ReadLine();
+            WriteInFile(MainIndex, "MainIndex");
 
+            Console.WriteLine("Generating Biword Index...");
+            new BiwordWrapper().IndexTokens(MainIndex.GetAllTokens());
+            Console.WriteLine("Completed Generating Biword Index...");
+
+            //Console.ReadLine();
+            Console.WriteLine("Compressing...");
             CompressedMainIndex = new IndexCompressor().Compress(MainIndex);
-            WriteInFile(CompressedMainIndex);
+            WriteInFile(CompressedMainIndex, "CompressedMainIndex");
 
             Console.WriteLine("Compressed Successfully");
-            Console.ReadLine();
+            //Console.ReadLine();
 
+            Console.WriteLine("decompressing...");
             var decompressedIndex = new IndexCompressor().Decompress(CompressedMainIndex);
-            WriteInFile(decompressedIndex);
+            WriteInFile(decompressedIndex, "decompressedIndex");
 
             Console.WriteLine("Decompressed Successfully");
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
-        private void WriteInFile(object index)
+        private void WriteInFile(object index, string filename)
         {
             var json = JsonConvert.SerializeObject(index);
-            File.WriteAllText($@"D:\MIR\Result\{index.GetType().Name}.json", json);
+            File.WriteAllText($@"D:\MIR\Result\{filename}.json", json);
         }
 
         private void IndexPersianFiles()
@@ -72,10 +79,12 @@ namespace Yaft
             var documentTokensBulk = ppc.GetTokens(documents, reader is EnglishReader);
 
 
-            foreach (var docTokens in documentTokensBulk)
+            foreach (var docTokens in documentTokensBulk.OrderBy(x => x.DocumentId))
             {
                 MainIndex.AddDocumentToIndex(docTokens);
             }
+
+            //MainIndex.SortPostings();
         }
 
         static void Main(string[] args)
