@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,14 +33,22 @@ namespace Yaft
             Console.ReadLine();
 
             CompressedMainIndex = new IndexCompressor().Compress(MainIndex);
+            WriteInFile(CompressedMainIndex);
 
             Console.WriteLine("Compressed Successfully");
             Console.ReadLine();
 
             var decompressedIndex = new IndexCompressor().Decompress(CompressedMainIndex);
+            WriteInFile(decompressedIndex);
 
             Console.WriteLine("Decompressed Successfully");
             Console.ReadLine();
+        }
+
+        private void WriteInFile(object index)
+        {
+            var json = JsonConvert.SerializeObject(index);
+            File.WriteAllText($@"D:\MIR\Result\{index.GetType().Name}.json", json);
         }
 
         private void IndexPersianFiles()

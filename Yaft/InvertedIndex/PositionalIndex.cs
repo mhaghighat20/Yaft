@@ -9,11 +9,11 @@ namespace Yaft.InvertedIndex
 {
     public class PositionalIndex
     {
-        public Dictionary<string, TokenPosting> IndexByTokens { get; private set; }
+        public Dictionary<string, TokenPosting> PostingsByToken { get; private set; }
 
         public PositionalIndex()
         {
-            IndexByTokens = new Dictionary<string, TokenPosting>();
+            PostingsByToken = new Dictionary<string, TokenPosting>();
         }
 
         public void AddDocumentToIndex(DocumentTokens documentTokens)
@@ -34,14 +34,14 @@ namespace Yaft.InvertedIndex
 
         private TokenPosting GetOrCreateTokenPostings(string token)
         {
-            if (IndexByTokens.TryGetValue(token, out TokenPosting tokenPostings))
+            if (PostingsByToken.TryGetValue(token, out TokenPosting tokenPostings))
             {
                 return tokenPostings;
             }
             else
             {
                 var result = new TokenPosting(token);
-                IndexByTokens.Add(token, result);
+                PostingsByToken.Add(token, result);
 
                 return result;
             }
@@ -49,7 +49,12 @@ namespace Yaft.InvertedIndex
 
         public List<(string token, int repeatCount)> GetAllTokensRepeats()
         {
-            return IndexByTokens.Values.Select(x => (token: x.Token, x.GetTokenOccurrenceCount())).ToList();
+            return PostingsByToken.Values.Select(x => (token: x.Token, x.GetTokenOccurrenceCount())).ToList();
+        }
+
+        public void AddDecompressedPosting(TokenPosting tokenPosting)
+        {
+            PostingsByToken.Add(tokenPosting.Token, tokenPosting);
         }
     }
 

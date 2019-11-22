@@ -48,35 +48,36 @@ namespace Yaft.Storage
             }
         }
 
-        public List<List<int>> DecompressList(List<string> compressedData)
+        public void DecompressList(List<RawDataMapping> mapping)
         {
             var i = 0;
-            var mapping = compressedData.Select(x => new RawDataMapping(x, i++)).ToList();
-            var mappingDic = mapping.ToDictionary(x => x.Id);
+
+            foreach (var item in mapping)
+                item.Id = i++;
+
+            Dictionary<int, RawDataMapping> mappingDic = mapping.ToDictionary(x => x.Id);
 
             var request = SerializeDecompressRequest(mapping);
             var content = new StringContent(request, Encoding.UTF8, "application/json");
 
             using (HttpClient client = new HttpClient())
             {
-                var response = client.PostAsync(CompressUrl + Mode, content).Result;
+                var response = client.PostAsync(DecompressUrl + Mode, content).Result;
 #if !DEBUG
                 response.EnsureSuccessStatusCode();
 #endif
 
 
                 var responseJson = response.Content.ReadAsStringAsync().Result;
-                var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseJson);
+                var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<string, List<int>>>(responseJson);
 
                 var result = new List<DocumentTokens>();
 
-                foreach (var compressedList in deserializedResponse)
+                foreach (var decompressedList in deserializedResponse)
                 {
-                    var id = Convert.ToInt32(compressedList.Key);
-                    mappingDic[id].CompressedData = compressedList.Value;
+                    var id = Convert.ToInt32(decompressedList.Key);
+                    mappingDic[id].RawData = decompressedList.Value;
                 }
-
-                return mapping.Select(x => x.RawData).ToList();
             }
         }
 
@@ -119,10 +120,10 @@ namespace Yaft.Storage
             Token = token;
         }
 
-        public RawDataMapping(string compressedData, int id)
+        public RawDataMapping(string token, string compressedData)
         {
             CompressedData = compressedData;
-            Id = id;
+            Token = token;
         }
     }
 

@@ -7,7 +7,7 @@ namespace Yaft.Storage
 {
     public class CompressedIndex
     {
-        public Dictionary<string, CompressedPosting> PostingsByToken { get; private set; }
+        public Dictionary<string, CompressedPosting> PostingsByToken { get; set; }
 
         public CompressedIndex()
         {
@@ -20,39 +20,45 @@ namespace Yaft.Storage
             PostingsByToken.Add(token, cp);
         }
 
-        public PositionalIndex Decompress()
-        {
-            var result = new PositionalIndex();
+        //public PositionalIndex Decompress()
+        //{
+        //    var result = new PositionalIndex();
 
-            foreach (var tokenItem in PostingsByToken)
-            {
-                var token = tokenItem.Key;
-                result.IndexByTokens.Add(token, tokenItem.Value.Decompress(token));
-            }
+        //    foreach (var tokenItem in PostingsByToken)
+        //    {
+        //        var token = tokenItem.Key;
+        //        result.PostingsByToken.Add(token, tokenItem.Value.Decompress(token));
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 
     public class CompressedPosting
     {
-        string CompressedListOfDocumentIds;
+        public string CompressedListOfDocumentIds { get; set; }
 
-        List<string> OccurrencesList;
+        public List<string> OccurrencesList { get; set; }
 
         [JsonIgnore]
-        public List<List<int>> rawData;
+        public List<List<int>> RawData { get; set; }
+        
+        // TODO re-init here after reading from disk
+        [JsonIgnore]
+        public string Token { get; set; }
 
         public CompressedPosting(TokenPosting posting)
         {
-            rawData = new List<List<int>>();
+            RawData = new List<List<int>>();
+            Token = posting.Token;
+
             var docIds = posting.AllOccurrencesByDocumentId.Keys.OrderBy(x => x).ToList();
 
-            rawData.Add(docIds);
+            RawData.Add(docIds);
 
             foreach (var docOccurrence in posting.AllOccurrencesByDocumentId.OrderBy(x => x.Key).Select(x => x.Value))
             {
-                rawData.Add(docOccurrence.Positions.ToList());
+                RawData.Add(docOccurrence.Positions.ToList());
             }
         }
 
@@ -62,20 +68,17 @@ namespace Yaft.Storage
             OccurrencesList = compressedStrings.Skip(1).ToList();
         }
 
-        public TokenPosting Decompress(string token)
+        public TokenPosting Decompress(List<List<int>> decompressedData)
         {
-            var result = new TokenPosting(token);
+            var result = new TokenPosting(Token);
 
-            var data = new List<string>() { CompressedListOfDocumentIds };
-            data.AddRange(OccurrencesList);
-
-            var decompressedData = new CompressUtility().DecompressList(data);
             var docIds = decompressedData.First();
 
             var i = 1;
             foreach (var docId in docIds)
             {
                 result.GetOrCreateDocumentOccurrence(docId).Positions.AddRange(decompressedData[i]);
+                i++;
             }
 
             return result;
