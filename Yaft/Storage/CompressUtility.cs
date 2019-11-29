@@ -8,12 +8,12 @@ using Yaft.Processor;
 
 namespace Yaft.Storage
 {
-    class CompressUtility
+    public class CompressUtility
     {
         private const string CompressUrl = PreprocessClient.BaseUrl + "compress?type=";
         private const string DecompressUrl = PreprocessClient.BaseUrl + "decompress?type=";
 
-        private readonly CompressMode Mode = CompressMode.gamma;
+        public static CompressMode Mode = CompressMode.gamma;
 
         public void CompressIntList(List<RawDataMapping> mapping)
         {

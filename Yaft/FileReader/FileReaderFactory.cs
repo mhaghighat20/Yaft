@@ -8,14 +8,16 @@ namespace Yaft.FileReader
 {
     public class FileReaderFactory
     {
+        //private const string ParentPath = @"D:\MIR\Phase1\";
+        private const string ParentPath = @"D:\Projects\MIR\Phase1\";
         public IFileReader GetEnglishReader()
         {
-            return new EnglishReader(@"D:\MIR\Phase1\English.csv");
+            return new EnglishReader(ParentPath +  @"English.csv");
         }
 
         public IFileReader GetPersianReader()
         {
-            return new PersianReader(@"D:\MIR\Phase1\Persian.xml");
+            return new PersianReader(ParentPath + @"Persian.xml");
         }
     }
 }

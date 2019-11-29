@@ -13,7 +13,7 @@ namespace Yaft.InvertedIndex
         public Dictionary<string, TokenPosting> PostingsByToken { get; private set; }
 
         [JsonIgnore]
-        private Dictionary<int, List<string>> DocumentsById { get; set; }
+        public Dictionary<int, List<string>> DocumentsById { get; private set; }
 
         public PositionalIndex()
         {
@@ -28,7 +28,7 @@ namespace Yaft.InvertedIndex
                 .Select(x => x.token)
                 .ToList());
 
-            foreach(var (position, token) in documentTokens.TokensByPosition)
+            foreach (var (position, token) in documentTokens.TokensByPosition)
             {
                 AddToken(token, documentTokens.DocumentId, position);
             }
@@ -74,7 +74,7 @@ namespace Yaft.InvertedIndex
 
         public void SortPostings()
         {
-            foreach(var posting in PostingsByToken.Values)
+            foreach (var posting in PostingsByToken.Values)
             {
                 posting.Sort();
             }
@@ -90,6 +90,38 @@ namespace Yaft.InvertedIndex
             {
                 return new List<int>();//TokenPosting(token);
             }
+        }
+
+        public int TermFrequency(string token, int docId)
+        {
+            if (PostingsByToken.TryGetValue(token, out TokenPosting value))
+            {
+                if (value.AllOccurrencesByDocumentId.TryGetValue(docId, out OccurrencesPerDocument occurrences))
+                    return occurrences.Positions.Count;
+            }
+
+            return 0;
+        }
+
+        public string GetWordInfo(string token)
+        {
+            var sb = new StringBuilder();
+            if (PostingsByToken.TryGetValue(token, out TokenPosting value))
+            {
+                foreach (var doc in value.AllOccurrencesByDocumentId.Values)
+                {
+                    sb.Append("DocId: " + doc.DocumentId);
+                    sb.Append(" Positions: " + string.Join(",", doc.Positions));
+                    sb.Append(Environment.NewLine);
+                }
+
+                return sb.ToString();
+            }
+            else
+            {
+                return "This word does not exist";
+            }
+
         }
 
         public string GetHighlight(int documentId)
@@ -152,7 +184,7 @@ namespace Yaft.InvertedIndex
 
     public class OccurrencesPerDocument
     {
-        readonly int DocumentId;
+        public readonly int DocumentId;
 
         public List<int> Positions { get; private set; }
 
