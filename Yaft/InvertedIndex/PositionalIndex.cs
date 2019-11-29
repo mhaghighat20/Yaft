@@ -92,15 +92,15 @@ namespace Yaft.InvertedIndex
             }
         }
 
-        public int TermFrequency(string token, int docId)
+        public OccurrencesPerDocument GetOccurrence(string token, int docId)
         {
             if (PostingsByToken.TryGetValue(token, out TokenPosting value))
             {
                 if (value.AllOccurrencesByDocumentId.TryGetValue(docId, out OccurrencesPerDocument occurrences))
-                    return occurrences.Positions.Count;
+                    return occurrences;
             }
 
-            return 0;
+            return new OccurrencesPerDocument(docId);
         }
 
         public string GetWordInfo(string token)

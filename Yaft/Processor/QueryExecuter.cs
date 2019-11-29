@@ -42,7 +42,7 @@ namespace Yaft.Processor
             return matching.DocumentIds.Select(x => new SearchResult(x, Index.GetHighlight(x))).ToList();
         }
 
-        public List<SearchResult> ExecuteTfIdfSearch()
+        public List<SearchResult> ExecuteTfIdfSearch(int? windowSize = null)
         {
             var idfs = Query.Select(x => (token: x, idf: Idf(x))).ToDictionary(x => x.token, x => x.idf);
             var queryVector = new TfIdfVector(idfs, QueryTokenCounts);
@@ -54,6 +54,9 @@ namespace Yaft.Processor
                     docIds.Add(docId);
             }
 
+            if (windowSize.HasValue)
+                docIds = ProximityFilter(docIds, windowSize.Value);
+
             var scoresByDocId = new Dictionary<int, double>();
 
             foreach (var docId in docIds)
@@ -62,7 +65,7 @@ namespace Yaft.Processor
 
                 foreach (var token in Query)
                 {
-                    tfByToken.Add(token, Index.TermFrequency(token, docId));
+                    tfByToken.Add(token, Index.GetOccurrence(token, docId).Positions.Count);
                 }
 
                 var docVector = new TfIdfVector(idfs, tfByToken);
@@ -72,6 +75,35 @@ namespace Yaft.Processor
             return scoresByDocId.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
         }
 
+        private HashSet<int> ProximityFilter(HashSet<int> docIds, int windowSize)
+        {
+            var newDocIds = new HashSet<int>();
+
+            foreach (var docId in docIds)
+            {
+                var firstPostitions = new List<int>();
+
+                foreach (var token in Query)
+                {
+                    var positions = Index.GetOccurrence(token, docId).Positions;
+
+                    if (positions.Any())
+                        firstPostitions.Add(positions.First());
+                }
+
+                if (firstPostitions.Count == Query.Count)
+                {
+                    if (firstPostitions.SequenceEqual(firstPostitions.OrderBy(x => x).ToList()))
+                    {
+                        if (firstPostitions.Last() - firstPostitions.First() <= windowSize)
+                            newDocIds.Add(docId);
+                    }
+                }
+
+            }
+
+            return newDocIds;
+        }
 
         private double Idf(string token)
         {
@@ -131,10 +163,10 @@ namespace Yaft.Processor
 
         public SearchResult(int documentId, string highlight) : this(documentId, highlight, 1)
         {
-            
+
         }
 
-        public SearchResult(int documentId, string highlight, double score) 
+        public SearchResult(int documentId, string highlight, double score)
         {
             DocumentId = documentId;
             Highlight = highlight;

@@ -37,10 +37,11 @@ namespace Yaft
 
             while (true)
             {
-                Console.WriteLine("Enter your command: [query|compress|decompress|info]");
+                Console.WriteLine("Enter your command: [query|proximity(windowSize)|and|compress|decompress|info(word)]");
                 var command = Console.ReadLine();
+                var commandWords = command.Split(' ');
 
-                if (command == "and" || command == "a" || command == "q" || command == "query")
+                if (command == "and" || command == "a" || command == "q" || command == "query" || commandWords.First() == "p" || commandWords.First() == "proximity")
                 {
                     Console.WriteLine("Enter your query: ");
                     var query = Console.ReadLine();
@@ -57,7 +58,12 @@ namespace Yaft
                     if (command == "and" || command == "a")
                         result = queryExecuter.ExecuteAndSearch();
                     else
-                        result = queryExecuter.ExecuteTfIdfSearch();
+                    {
+                        if (commandWords.First() == "p" || commandWords.First() == "proximity")
+                            result = queryExecuter.ExecuteTfIdfSearch(Convert.ToInt32(commandWords[1]));
+                        else
+                            result = queryExecuter.ExecuteTfIdfSearch();
+                    }
 
                     Console.WriteLine("Query after preprocess: " + JsonConvert.SerializeObject(queryExecuter.Query));
                     Console.WriteLine(string.Join(Environment.NewLine, result));
@@ -94,7 +100,7 @@ namespace Yaft
         {
             Console.WriteLine("Compressing...");
             CompressedMainIndex = new IndexCompressor().Compress(MainIndex);
-            WriteInFile(CompressedMainIndex, "CompressedMainIndex");
+            WriteInFile(CompressedMainIndex, "CompressedMainIndex_" + CompressUtility.Mode);
 
             Console.WriteLine("Compressed Successfully");
         }
