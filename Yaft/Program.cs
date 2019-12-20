@@ -70,6 +70,12 @@ namespace Yaft
                             result = queryExecuter.ExecuteTfIdfSearch();
                     }
 
+                    Console.WriteLine("Enter classification filter: [1|2|3|4|no filter(Enter)]");
+                    var classFilterLine = Console.ReadLine();
+                    byte? classFilter = null;
+
+                    
+
                     Console.WriteLine("Query after preprocess: " + JsonConvert.SerializeObject(queryExecuter.Query));
                     Console.WriteLine(string.Join(Environment.NewLine, result));
                     Console.WriteLine("---------------------------------" + Environment.NewLine);
