@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Yaft.Processor;
 
 namespace Yaft.Classification
@@ -38,17 +40,45 @@ namespace Yaft.Classification
 
         private static string SendRequest(string request, string url)
         {
-            var content = new StringContent(request, Encoding.UTF8, "application/json");
+            var i = 0;
 
-            using (HttpClient client = new HttpClient())
+            while (true)
             {
-                var response = client.PostAsync(url, content).Result;
+                using (HttpClient client = new HttpClient())
+                {
+                    var content = new StringContent("{\"vectors\": []}", Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(url, content).Result;
+// response.EnsureSuccessStatusCode();
+
+                    if (response.StatusCode == HttpStatusCode.Accepted || response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        Console.WriteLine("Waiting... " + i++);
+                        Task.Delay(1000).Wait();
+                    }
+                    else if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid Status Code: " + response.StatusCode);
+                    }
+                }
+            }
+
+            {
+                var content = new StringContent(request, Encoding.UTF8, "application/json");
+
+                using (HttpClient client = new HttpClient() { Timeout = new TimeSpan(0, 0, 1200) })
+                {
+                    var response = client.PostAsync(url, content).Result;
 #if !DEBUG
                 response.EnsureSuccessStatusCode();
 #endif
 
-                var responseJson = response.Content.ReadAsStringAsync().Result;
-                return responseJson;
+                    var responseJson = response.Content.ReadAsStringAsync().Result;
+                    return responseJson;
+                }
             }
         }
 
@@ -76,6 +106,8 @@ namespace Yaft.Classification
 
     public enum Mode
     {
-        SVM
+        SVM,
+        RndFrst,
+
     }
 }

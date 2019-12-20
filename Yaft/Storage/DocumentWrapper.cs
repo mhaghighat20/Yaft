@@ -50,5 +50,13 @@ namespace Yaft.Storage
         {
             return documentTokens.TokensByPosition.Select(x => x.token).Distinct().ToList();
         }
+
+        public bool IsClassifiedCorrectly()
+        {
+            if (ClassifiedTag.HasValue)
+                return Document.Tag == ClassifiedTag;
+            else
+                throw new InvalidOperationException("Doc is not classified yet");
+        }
     }
 }

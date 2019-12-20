@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Yaft.Processor;
 
 namespace Yaft.Classification
@@ -19,10 +16,10 @@ namespace Yaft.Classification
         [JsonProperty(PropertyName = "vector")]
         Dictionary<int, float> Vector { get; set; }
 
-        [JsonProperty(PropertyName = "class")]
+        [JsonProperty(PropertyName = "class", NullValueHandling = NullValueHandling.Ignore)]
         byte? Tag { get; set; }
 
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]
         int? Id { get; set; }
 
         public VectorWithTag(TfIdfVector vector, byte? tag, int? id)

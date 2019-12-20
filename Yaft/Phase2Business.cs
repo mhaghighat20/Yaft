@@ -23,8 +23,8 @@ namespace Yaft
         {
             var classifier = new SvmClassifierClient();
 
-            PrepareData(true);
-            classifier.Train(Documents.Values.Select(x => (x.CreateClassificationVector(tokenMapper), x.Document.Tag)).ToList());
+            //PrepareData(true);
+            //classifier.Train(Documents.Values.Select(x => (x.CreateClassificationVector(tokenMapper), x.Document.Tag)).ToList());
 
             PrepareData(false);
             var result = classifier.Classify(Documents.Values.Select(x => x.CreateClassificationVector(tokenMapper)).ToList());
@@ -34,8 +34,16 @@ namespace Yaft
                 Documents.Values.ElementAt(i).ClassifiedTag = result[i];
             }
 
-            foreach (var item in result)
-                Console.WriteLine(item);
+            var docs = Documents.Values;
+            var correct = docs.Count(x => x.IsClassifiedCorrectly());
+            var precision =  correct * 1.0 / docs.Count;
+
+
+            Console.WriteLine(classifier.GetType().Name + " result:");
+            Console.WriteLine(nameof(correct) + ": " + correct);
+            Console.WriteLine(nameof(docs) + ": " + docs.Count);
+            Console.WriteLine(nameof(precision) + ": " + precision);
+
 
             Console.ReadLine();
         }
