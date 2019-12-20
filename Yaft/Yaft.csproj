@@ -49,6 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classification\ClassifierClient.cs" />
+    <Compile Include="Classification\ClientRequest.cs" />
+    <Compile Include="Classification\SvmClassifierClient.cs" />
+    <Compile Include="Classification\VectorClassifier.cs" />
     <Compile Include="FileReader\EnglishReader.cs" />
     <Compile Include="FileReader\Document.cs" />
     <Compile Include="FileReader\EnglishRow.cs" />
@@ -59,14 +63,18 @@
     <Compile Include="FileReader\WikiPage.cs" />
     <Compile Include="InvertedIndex\BiwordWrapper.cs" />
     <Compile Include="InvertedIndex\PositionalIndex.cs" />
+    <Compile Include="Phase2Business.cs" />
     <Compile Include="Processor\DocumentTokens.cs" />
     <Compile Include="Processor\PreprocessClient.cs" />
     <Compile Include="Processor\QueryExecuter.cs" />
     <Compile Include="Processor\QueryProcessor.cs" />
+    <Compile Include="Processor\TfIdfVector.cs" />
+    <Compile Include="Processor\TokenMapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\CompressedIndex.cs" />
     <Compile Include="Storage\CompressUtility.cs" />
+    <Compile Include="Storage\DocumentWrapper.cs" />
     <Compile Include="Storage\IndexCompressor.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -28,7 +28,7 @@ namespace Yaft.FileReader
                 var result = new List<Document>();
                 var id = IdGenerator.Instance.ReserveRange(rows.Count);
 
-                foreach (var row in rows)
+                foreach (var row in rows.Take(500))
                 {
                     result.Add(row.ToDocument(id));
 

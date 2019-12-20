@@ -14,9 +14,16 @@ namespace Yaft.Processor
         public const string BaseUrl = "http://82.196.6.128:8001/api/v1/";
         private const string EnglishUrl = BaseUrl + "preprocess_documents?lang=en";
         private const string PersianUrl = BaseUrl + "preprocess_documents?lang=fa";
+        private bool UseTitle { get; }
+        private bool IsEnglish { get; }
 
+        public PreprocessClient(bool useTitle, bool isEnglish)
+        {
+            UseTitle = useTitle;
+            IsEnglish = isEnglish;
+        }
 
-        public List<DocumentTokens> GetTokens(List<Document> input, bool isEnglish)
+        public List<DocumentTokens> GetTokens(List<Document> input)
         {
             var request = SerializeRequest(input);
             var content = new StringContent(request, Encoding.UTF8, "application/json");
@@ -25,7 +32,7 @@ namespace Yaft.Processor
             {
                 var url = PersianUrl;
 
-                if (isEnglish)
+                if (IsEnglish)
                     url = EnglishUrl;
 
                 var response = client.PostAsync(url, content).Result;
@@ -53,7 +60,10 @@ namespace Yaft.Processor
 
             foreach(var doc in input)
             {
-                request.Add(doc.Id, doc.Text);
+                if (UseTitle)
+                    request.Add(doc.Id, doc.Title);
+                else
+                    request.Add(doc.Id, doc.Text);
             }
 
             return "{\"documents\": " + JsonConvert.SerializeObject(request) + "}";

@@ -128,6 +128,14 @@ namespace Yaft.InvertedIndex
         {
             return string.Join(" ", DocumentsById[documentId].Take(20));
         }
+
+        public double Idf(string token)
+        {
+            var totalDocs = DocumentsById.Keys.Count;
+            var documentsWithTokenOccurrence = SearchByToken(token).Count;
+
+            return Math.Log(totalDocs * 1.0 / documentsWithTokenOccurrence, 2);
+        }
     }
 
     public class TokenPosting

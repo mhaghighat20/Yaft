@@ -17,7 +17,12 @@ namespace Yaft
         PositionalIndex MainIndex;
         CompressedIndex CompressedMainIndex;
 
-        void Run()
+        void RunPhase2 ()
+        {
+            new Phase2Business().Run();
+        }
+
+        void RunPhase1()
         {
             MainIndex = new PositionalIndex();
 
@@ -131,7 +136,7 @@ namespace Yaft
 
         private void IndexEnglishFiles()
         {
-            var reader = new FileReaderFactory().GetEnglishReader();
+            var reader = new FileReaderFactory().GetEnglishReaderForPhase1();
 
             IndexDocuments(reader);
         }
@@ -139,8 +144,8 @@ namespace Yaft
         private void IndexDocuments(IFileReader reader)
         {
             var documents = reader.ReadFile();
-            var ppc = new PreprocessClient();
-            var documentTokensBulk = ppc.GetTokens(documents, reader is EnglishReader);
+            var ppc = new PreprocessClient(false, reader is EnglishReader);
+            var documentTokensBulk = ppc.GetTokens(documents);
 
 
             foreach (var docTokens in documentTokensBulk.OrderBy(x => x.DocumentId))
@@ -154,7 +159,7 @@ namespace Yaft
         static void Main(string[] args)
         {
             var p = new Program();
-            p.Run();
+            p.RunPhase2();
         }
     }
 }
