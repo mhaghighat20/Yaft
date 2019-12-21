@@ -28,7 +28,7 @@ namespace Yaft.Processor
             var request = SerializeRequest(input);
             var content = new StringContent(request, Encoding.UTF8, "application/json");
 
-            using (HttpClient client = new HttpClient())
+            using (HttpClient client = new HttpClient() { Timeout = new TimeSpan(0, 10, 0) })
             {
                 var url = PersianUrl;
 

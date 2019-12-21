@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Classification\ClassifierClient.cs" />
     <Compile Include="Classification\ClientRequest.cs" />
+    <Compile Include="Classification\NativeBayesClassifierClient.cs" />
     <Compile Include="Classification\RandomForestClassifierClient.cs" />
     <Compile Include="Classification\SvmClassifierClient.cs" />
     <Compile Include="Classification\VectorClassifier.cs" />

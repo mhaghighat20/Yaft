@@ -11,7 +11,7 @@ namespace Yaft.FileReader
         //private const string ParentPath = @"D:\MIR\Phase1\";
         private const string ParentPathPhase1 = @"D:\Projects\MIR\Phase1\";
 
-        private const string ParentPathPhase2 = @"D:\MIR\Phase2\";
+        private const string ParentPathPhase2 = @"D:\Projects\MIR\Phase2\";
 
         public IFileReader GetEnglishReaderForPhase1()
         {

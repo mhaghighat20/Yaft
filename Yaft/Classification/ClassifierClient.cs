@@ -108,6 +108,7 @@ namespace Yaft.Classification
     {
         SVM,
         RndFrst,
-
+        naivebayes,
+        knn
     }
 }
