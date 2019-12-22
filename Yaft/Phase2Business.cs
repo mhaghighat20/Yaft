@@ -23,8 +23,8 @@ namespace Yaft
         {
             var classifier = new KnnClassifierClient();
 
-            PrepareData(true);
-            classifier.Train(Documents.Values.Select(x => (x.CreateClassificationVector(tokenMapper), x.Document.Tag)).ToList());
+            //PrepareData(true);
+            //classifier.Train(Documents.Values.Select(x => (x.CreateClassificationVector(tokenMapper), x.Document.Tag)).ToList());
 
             PrepareData(false);
             var result = classifier.Classify(Documents.Values.Select(x => x.CreateClassificationVector(tokenMapper)).ToList());
