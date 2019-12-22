@@ -21,7 +21,7 @@ namespace Yaft
 
         public void Run()
         {
-            var classifier = new NaiveBayesClassifierClient();
+            var classifier = new KnnClassifierClient();
 
             PrepareData(true);
             classifier.Train(Documents.Values.Select(x => (x.CreateClassificationVector(tokenMapper), x.Document.Tag)).ToList());
