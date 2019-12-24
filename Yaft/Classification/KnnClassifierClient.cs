@@ -9,7 +9,7 @@ namespace Yaft.Classification
 {
     public class KnnClassifierClient
     {
-        ClassifierClient client = new ClassifierClient(Mode.knn, 9.0f);
+        ClassifierClient client = new ClassifierClient(Mode.knn, 1.0f);
 
         public void Train(List<(TfIdfVector vector, byte Tag)> data)
         {

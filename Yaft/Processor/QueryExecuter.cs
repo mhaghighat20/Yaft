@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Yaft.InvertedIndex;
+using Yaft.Storage;
 
 namespace Yaft.Processor
 {
@@ -42,7 +43,7 @@ namespace Yaft.Processor
             return matching.DocumentIds.Select(x => new SearchResult(x, Index.GetHighlight(x))).ToList();
         }
 
-        public List<SearchResult> ExecuteTfIdfSearch(int? windowSize = null)
+        public List<SearchResult> ExecuteTfIdfSearch(int? windowSize = null, byte? filterByClass = null)
         {
             var idfs = Query.Select(x => (token: x, idf: Index.Idf(x))).ToDictionary(x => x.token, x => x.idf);
             var queryVector = new TfIdfVector(idfs, QueryTokenCounts);
@@ -72,7 +73,15 @@ namespace Yaft.Processor
                 scoresByDocId.Add(docId, docVector.Multiply(queryVector));
             }
 
-            return scoresByDocId.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
+            if (filterByClass == null)
+                return scoresByDocId.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
+
+            var documents = docIds.Select(x => new DocumentWrapper(Index.PureDocumentsById[x])).ToDictionary(x => x.Id);
+            var vectorGenerator = new VectorGenerator(documents);
+            vectorGenerator.Process();
+
+
+            
         }
 
         private HashSet<int> ProximityFilter(HashSet<int> docIds, int windowSize)

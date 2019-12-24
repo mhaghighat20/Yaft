@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yaft.FileReader;
 using Yaft.Processor;
 
 namespace Yaft.InvertedIndex
@@ -14,6 +15,9 @@ namespace Yaft.InvertedIndex
 
         [JsonIgnore]
         public Dictionary<int, List<string>> DocumentsById { get; private set; }
+
+        [JsonIgnore]
+        public Dictionary<int, Document> PureDocumentsById { get; set; }
 
         public PositionalIndex()
         {

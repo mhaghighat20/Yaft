@@ -159,6 +159,7 @@ namespace Yaft
                 MainIndex.AddDocumentToIndex(docTokens);
             }
 
+            MainIndex.PureDocumentsById = documents.ToDictionary(x => x.Id);
             //MainIndex.SortPostings();
         }
 

@@ -54,6 +54,7 @@
     <Compile Include="Classification\KnnClassifierClient.cs" />
     <Compile Include="Classification\NativeBayesClassifierClient.cs" />
     <Compile Include="Classification\RandomForestClassifierClient.cs" />
+    <Compile Include="Classification\Result.cs" />
     <Compile Include="Classification\SvmClassifierClient.cs" />
     <Compile Include="Classification\VectorClassifier.cs" />
     <Compile Include="FileReader\EnglishReader.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Processor\QueryProcessor.cs" />
     <Compile Include="Processor\TfIdfVector.cs" />
     <Compile Include="Processor\TokenMapper.cs" />
+    <Compile Include="Processor\VectorGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\CompressedIndex.cs" />

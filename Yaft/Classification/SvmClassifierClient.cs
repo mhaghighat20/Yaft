@@ -9,7 +9,7 @@ namespace Yaft.Classification
 {
     class SvmClassifierClient : VectorClassifier
     {
-        ClassifierClient client = new ClassifierClient(Mode.SVM, 2.0f);
+        ClassifierClient client = new ClassifierClient(Mode.SVM, 0.5f);
 
         public void Train(List<(TfIdfVector vector, byte Tag)> data)
         {
