@@ -19,7 +19,8 @@ namespace Yaft
 
         void RunPhase2 ()
         {
-            new Phase2Business().Run();
+            //new Phase2Business().Run();
+            RunPhase1();
         }
 
         void RunPhase1()

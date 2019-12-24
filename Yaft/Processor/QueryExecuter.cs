@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yaft.Classification;
 using Yaft.InvertedIndex;
 using Yaft.Storage;
 
@@ -76,12 +77,24 @@ namespace Yaft.Processor
             if (filterByClass == null)
                 return scoresByDocId.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
 
-            var documents = docIds.Select(x => new DocumentWrapper(Index.PureDocumentsById[x])).ToDictionary(x => x.Id);
+            var documents = docIds.Select(x => new DocumentWrapper(Index.PureDocumentsById[x])).ToDictionary(x => x.Document.Id);
             var vectorGenerator = new VectorGenerator(documents);
             vectorGenerator.Process();
 
+            var tokenMapper = new TokenMapper();
+            var classifier = new RandomForestClassifierClient();
+            var result = classifier.Classify(documents.Values.Select(x => x.CreateClassificationVector(tokenMapper)).ToList());
 
-            
+            for (int i = 0; i < result.Count; i++)
+            {
+                documents.Values.ElementAt(i).ClassifiedTag = result[i];
+            }
+
+            var filteredResult = scoresByDocId.Where(x => documents[x.Key].ClassifiedTag == filterByClass).ToList();
+
+            Console.WriteLine($"Removed {filteredResult.Count} items with other classes");
+
+            return filteredResult.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
         }
 
         private HashSet<int> ProximityFilter(HashSet<int> docIds, int windowSize)
