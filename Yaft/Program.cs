@@ -71,13 +71,18 @@ namespace Yaft
                             result = queryExecuter.ExecuteTfIdfSearch();
                     }
 
-                    Console.WriteLine("Enter classification filter: [1|2|3|4|no filter(Enter)]");
-                    var classFilterLine = Console.ReadLine();
-                    byte? classFilter = null;
-
                     
 
                     Console.WriteLine("Query after preprocess: " + JsonConvert.SerializeObject(queryExecuter.Query));
+                    Console.WriteLine(string.Join(Environment.NewLine, result));
+                    Console.WriteLine("---------------------------------" + Environment.NewLine);
+
+                    Console.WriteLine("Enter classification filter: [1|2|3|4|no filter(Enter)]");
+                    var classFilterLine = Console.ReadLine();
+                    byte classFilter = Convert.ToByte(classFilterLine);
+
+                    queryExecuter = new QueryExecuter(query, MainIndex);
+                    result = queryExecuter.ExecuteTfIdfSearch(null, classFilter);
                     Console.WriteLine(string.Join(Environment.NewLine, result));
                     Console.WriteLine("---------------------------------" + Environment.NewLine);
                 }
@@ -129,7 +134,7 @@ namespace Yaft
         private void WriteInFile(object index, string filename)
         {
             var json = JsonConvert.SerializeObject(index);
-            var filePath = $@"D:\Projects\MIR\Result\{filename}.json";
+            var filePath = $@"D:\MIR\Result\{filename}.json";
             File.WriteAllText(filePath, json);
             Console.WriteLine("Size is: " +  new FileInfo(filePath).Length / 1024 + " KB");
         }

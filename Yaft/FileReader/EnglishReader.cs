@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,11 @@ namespace Yaft.FileReader
         public List<Document> ReadFile()
         {
             using (var reader = new StreamReader(FilePath))
-            using (var csv = new CsvReader(reader))
+            using (var csv = new CsvReader(reader, new Configuration()
+            {
+                HeaderValidated = null,
+                MissingFieldFound = null
+            }))
             {
                 csv.Configuration.HasHeaderRecord = true;
                 var rows = csv.GetRecords<EnglishRow>().ToList();
