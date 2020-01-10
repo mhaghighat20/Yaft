@@ -58,7 +58,7 @@ namespace Yaft
             var reader = new FileReaderFactory().GetEnglishReaderForPhase2(isTrain);
             Documents = reader.ReadFile().Select(x => new DocumentWrapper(x)).ToDictionary(x => x.Document.Id);
 
-            var generator = new VectorGenerator(Documents);
+            var generator = new VectorGenerator(Documents, true);
 
             generator.Process();   
         }

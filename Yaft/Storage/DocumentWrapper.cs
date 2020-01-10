@@ -34,7 +34,9 @@ namespace Yaft.Storage
 
         public void CreateVector(PositionalIndex TitleIndex, PositionalIndex ContentIndex)
         {
-            TitleVector = new TfIdfVector(TitleIndex, GetTokens(TitleTokens), Document.Id);
+            if (TitleIndex != null)
+                TitleVector = new TfIdfVector(TitleIndex, GetTokens(TitleTokens), Document.Id);
+
             ContentVector = new TfIdfVector(ContentIndex, GetTokens(ContentTokens), Document.Id);
         }
 

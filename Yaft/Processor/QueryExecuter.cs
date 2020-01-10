@@ -78,7 +78,7 @@ namespace Yaft.Processor
                 return scoresByDocId.OrderByDescending(x => x.Value).Select(x => new SearchResult(x.Key, Index.GetHighlight(x.Key), x.Value)).ToList();
 
             var documents = docIds.Select(x => new DocumentWrapper(Index.PureDocumentsById[x])).ToDictionary(x => x.Document.Id);
-            var vectorGenerator = new VectorGenerator(documents);
+            var vectorGenerator = new VectorGenerator(documents, true);
             vectorGenerator.Process();
 
             var tokenMapper = new TokenMapper();
