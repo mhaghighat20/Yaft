@@ -13,21 +13,21 @@ namespace Yaft.Clustering
 {
     class ClusteringClient : VectorClustering
     {
-        private const string trainUrl = PreprocessClient.BaseUrl + "collect_data_set?reset=true";
-        private string ClassifyUrl { get; } = PreprocessClient.BaseUrl + "classify?method=";
+        //private const string trainUrl = PreprocessClient.BaseUrl + "collect_data_set?reset=true";
+        private string ClassifyUrl { get; } = PreprocessClient.BaseUrl + "cluster?method=";
         private Mode Algorithm { get; }
 
-        public ClusteringClient(Mode algorithm, float param)
+        public ClusteringClient(Mode algorithm, byte param)
         {
             Algorithm = algorithm;
-            ClassifyUrl += Algorithm.ToString().ToLower() + "&param=" + param;
+            ClassifyUrl += Algorithm.ToString().ToLower() + "&k=" + param;
         }
 
-        public void Train(List<TfIdfVector> data)
-        {
-            var request = SerializeTrainRequest(data);
-            SendRequest(request, trainUrl);
-        }
+        //public void Train(List<TfIdfVector> data)
+        //{
+        //    var request = SerializeTrainRequest(data);
+        //    SendRequest(request, trainUrl);
+        //}
 
         public List<byte> Classify(List<TfIdfVector> vectorList)
         {
@@ -43,29 +43,29 @@ namespace Yaft.Clustering
         {
             var i = 0;
 
-            while (true)
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    var content = new StringContent("{\"vectors\": []}", Encoding.UTF8, "application/json");
-                    var response = client.PostAsync(url, content).Result;
-                    // response.EnsureSuccessStatusCode();
+            //while (true)
+            //{
+            //    using (HttpClient client = new HttpClient())
+            //    {
+            //        var content = new StringContent("{\"vectors\": []}", Encoding.UTF8, "application/json");
+            //        var response = client.PostAsync(url, content).Result;
+            //        // response.EnsureSuccessStatusCode();
 
-                    if (response.StatusCode == HttpStatusCode.Accepted || response.StatusCode == HttpStatusCode.NoContent)
-                    {
-                        Console.WriteLine("Waiting... " + i++);
-                        Task.Delay(1000).Wait();
-                    }
-                    else if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Invalid Status Code: " + response.StatusCode);
-                    }
-                }
-            }
+            //        if (response.StatusCode == HttpStatusCode.Accepted || response.StatusCode == HttpStatusCode.NoContent)
+            //        {
+            //            Console.WriteLine("Waiting... " + i++);
+            //            Task.Delay(1000).Wait();
+            //        }
+            //        else if (response.StatusCode == HttpStatusCode.OK)
+            //        {
+            //            break;
+            //        }
+            //        else
+            //        {
+            //            throw new InvalidOperationException("Invalid Status Code: " + response.StatusCode);
+            //        }
+            //    }
+            //}
 
             {
                 var content = new StringContent(request, Encoding.UTF8, "application/json");

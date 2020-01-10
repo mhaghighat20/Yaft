@@ -9,12 +9,7 @@ namespace Yaft.Clustering
 {
     class GMMClusteringClient : VectorClustering
     {
-        ClusteringClient client = new ClusteringClient(Mode.gmm, 1.0f);
-
-        public void Train(List<TfIdfVector> data)
-        {
-            client.Train(data);
-        }
+        ClusteringClient client = new ClusteringClient(Mode.gmm, 5);
 
         public List<byte> Classify(List<TfIdfVector> vectorList)
         {

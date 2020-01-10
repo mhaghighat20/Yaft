@@ -9,12 +9,7 @@ namespace Yaft.Clustering
 {
     public class KMeansClusteringClient : VectorClustering
     {
-        ClusteringClient client = new ClusteringClient(Mode.kmeans, 1.0f);
-
-        public void Train(List<TfIdfVector> data)
-        {
-            client.Train(data);
-        }
+        ClusteringClient client = new ClusteringClient(Mode.kmeans, 5);
 
         public List<byte> Classify(List<TfIdfVector> vectorList)
         {

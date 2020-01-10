@@ -9,7 +9,7 @@ namespace Yaft.Clustering
 {
     public interface VectorClustering
     {
-        void Train(List<TfIdfVector> data);
+        //void Train(List<TfIdfVector> data);
 
         List<byte> Classify(List<TfIdfVector> vectorList);
     }

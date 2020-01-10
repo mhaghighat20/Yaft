@@ -42,7 +42,11 @@ namespace Yaft.Storage
 
         internal TfIdfVector CreateClassificationVector(TokenMapper mapper)
         {
-            var result = TitleVector.Add(ContentVector, 2);
+            var result = ContentVector;
+
+            if (TitleVector != null)
+                result = TitleVector.Add(ContentVector, 2);
+
             result.ConvertTokenToId(mapper);
 
             return result;
