@@ -57,6 +57,9 @@
     <Compile Include="Classification\Result.cs" />
     <Compile Include="Classification\SvmClassifierClient.cs" />
     <Compile Include="Classification\VectorClassifier.cs" />
+    <Compile Include="Clustering\ClusteringClient.cs" />
+    <Compile Include="Clustering\KMeansClusteringClient.cs" />
+    <Compile Include="Clustering\VectorClustering.cs" />
     <Compile Include="FileReader\EnglishReader.cs" />
     <Compile Include="FileReader\Document.cs" />
     <Compile Include="FileReader\EnglishRow.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="InvertedIndex\BiwordWrapper.cs" />
     <Compile Include="InvertedIndex\PositionalIndex.cs" />
     <Compile Include="Phase2Business.cs" />
+    <Compile Include="Phase3Business.cs" />
     <Compile Include="Processor\DocumentTokens.cs" />
     <Compile Include="Processor\PreprocessClient.cs" />
     <Compile Include="Processor\QueryExecuter.cs" />

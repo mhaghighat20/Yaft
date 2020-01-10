@@ -35,7 +35,12 @@ namespace Yaft.FileReader
 
                 foreach (var row in rows)
                 {
-                    result.Add(row.ToDocument(id));
+                    var currentId = row.ID;
+
+                    if (string.IsNullOrWhiteSpace(currentId))
+                        result.Add(row.ToDocument(id));
+                    else
+                        result.Add(row.ToDocument(Convert.ToInt32(currentId)));
 
                     id++;
                 }

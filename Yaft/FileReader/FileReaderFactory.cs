@@ -13,7 +13,7 @@ namespace Yaft.FileReader
 
         private const string ParentPathPhase2 = @"D:\MIR\Phase2\";
 
-        private const string PathPhase3 = @"D:\MIR\Phase3\Data.csv";
+        public const string ParentPathPhase3 = @"D:\MIR\Phase3\";
 
         public IFileReader GetEnglishReaderForPhase1()
         {
@@ -31,7 +31,7 @@ namespace Yaft.FileReader
 
         public IFileReader GetEnglishReaderForPhase3()
         {
-            return new EnglishReader(PathPhase3);
+            return new EnglishReader(ParentPathPhase3 + "Data.csv");
         }
 
         public IFileReader GetPersianReader()

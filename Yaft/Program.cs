@@ -17,6 +17,17 @@ namespace Yaft
         PositionalIndex MainIndex;
         CompressedIndex CompressedMainIndex;
 
+        static void Main(string[] args)
+        {
+            var p = new Program();
+            p.RunPhase3();
+        }
+
+        void RunPhase3()
+        {
+            new Phase3Business().Run();
+        }
+
         void RunPhase2 ()
         {
             //new Phase2Business().Run();
@@ -167,12 +178,6 @@ namespace Yaft
 
             MainIndex.PureDocumentsById = documents.ToDictionary(x => x.Id);
             //MainIndex.SortPostings();
-        }
-
-        static void Main(string[] args)
-        {
-            var p = new Program();
-            p.RunPhase2();
         }
     }
 }
