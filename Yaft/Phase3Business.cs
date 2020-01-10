@@ -53,7 +53,7 @@ namespace Yaft
         public ClusteringResult(string mode, IEnumerable<DocumentWrapper> input)
         {
             var dt = DateTime.Now.ToString("HH-mm");
-            Name = mode + "_" + dt;
+            Name = mode.Replace("Client", "") + "_" + dt;
             List = input.Select(x => new ResultRow()
             {
                 ID = x.Document.Id,

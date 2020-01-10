@@ -109,6 +109,7 @@ namespace Yaft.Clustering
     public enum Mode
     {
         kmeans,
-
+        gmm,
+        hierarchical
     }
 }

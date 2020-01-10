@@ -58,6 +58,8 @@
     <Compile Include="Classification\SvmClassifierClient.cs" />
     <Compile Include="Classification\VectorClassifier.cs" />
     <Compile Include="Clustering\ClusteringClient.cs" />
+    <Compile Include="Clustering\GMMClusteringClient.cs" />
+    <Compile Include="Clustering\HierarchicalClusteringClient.cs" />
     <Compile Include="Clustering\KMeansClusteringClient.cs" />
     <Compile Include="Clustering\VectorClustering.cs" />
     <Compile Include="FileReader\EnglishReader.cs" />
