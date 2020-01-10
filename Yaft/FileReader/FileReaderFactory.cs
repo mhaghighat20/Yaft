@@ -8,12 +8,13 @@ namespace Yaft.FileReader
 {
     public class FileReaderFactory
     {
+        public const string ProjectPath = @"D:\Projects\MIR\";
         //private const string ParentPath = @"D:\MIR\Phase1\";
         private const string ParentPathPhase1 = @"D:\MIR\Phase1\";
 
         private const string ParentPathPhase2 = @"D:\MIR\Phase2\";
 
-        public const string ParentPathPhase3 = @"D:\MIR\Phase3\";
+        public const string ParentPathPhase3 = ProjectPath + @"Phase3\";
 
         public IFileReader GetEnglishReaderForPhase1()
         {

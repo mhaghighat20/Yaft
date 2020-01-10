@@ -70,7 +70,7 @@ namespace Yaft.Clustering
             {
                 var content = new StringContent(request, Encoding.UTF8, "application/json");
 
-                using (HttpClient client = new HttpClient() { Timeout = new TimeSpan(0, 0, 1200) })
+                using (HttpClient client = new HttpClient() { Timeout = new TimeSpan(0, 0, 3000) })
                 {
                     var response = client.PostAsync(url, content).Result;
 #if !DEBUG

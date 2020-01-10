@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,7 @@ namespace Yaft
         {
             PrepareData();
 
-            var clusteringClient = new KMeansClusteringClient();
+            var clusteringClient = new GMMClusteringClient();
 
             var result = clusteringClient.Classify(Documents.Values.Select(x => x.CreateClassificationVector(tokenMapper)).ToList());
 
@@ -36,7 +37,7 @@ namespace Yaft
         private void PrepareData()
         {
             var reader = new FileReaderFactory().GetEnglishReaderForPhase3();
-            Documents = reader.ReadFile().Select(x => new DocumentWrapper(x)).ToDictionary(x => x.Document.Id);
+            Documents = reader.ReadFile().Take(1000).Select(x => new DocumentWrapper(x)).ToDictionary(x => x.Document.Id);
 
             var generator = new VectorGenerator(Documents, false);
 
@@ -64,8 +65,10 @@ namespace Yaft
 
         public void Write()
         {
-            using (var writer = new StreamWriter(FileReaderFactory.ParentPathPhase3 + Name))
-            using (var csv = new CsvWriter(writer))
+            using (var writer = new StreamWriter(FileReaderFactory.ParentPathPhase3 + Name + ".csv"))
+            using (var csv = new CsvWriter(writer, new Configuration()
+            {
+            }))
             {
                 csv.WriteRecords(List);
             }
